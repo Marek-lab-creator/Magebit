@@ -15,6 +15,26 @@ class ProductController
         $this->db = $database;
     }
 
+/**
+     * Get all products with their type names
+     * 
+     * @return array List of all products
+     */
+    public function getAllProducts()
+    {
+        try {
+            $query = "SELECT p.*, pt.name as type_name 
+                     FROM products p
+                     LEFT JOIN product_types pt ON p.type_id = pt.id
+                     ORDER BY p.id DESC";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return ['error' => 'Failed to fetch products: ' . $e->getMessage()];
+        }
+    }
  
 
     /**
