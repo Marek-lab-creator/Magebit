@@ -47,12 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     $action = $_POST['action'];
 }
 
-// // Initialize database
-// $db = getDatabase();
-// if (isset($db['error'])) {
-//     jsonResponse($db);
-// }
-
 // Initialize database
 $db = getDatabase();
 if (is_array($db) && isset($db['error'])) {
