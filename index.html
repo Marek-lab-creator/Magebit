@@ -292,6 +292,47 @@
                 });
         }
        
+        // Delete product
+        function deleteProduct(id) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                fetch(`process.php?action=delete_product&id=${id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            loadProducts();
+                        } else {
+                            alert('Error: ' + data.error);
+                        }
+                    })
+                    .catch(error => alert('Error: ' + error.message));
+            }
+        }function editProduct(id) {
+            fetch(`process.php?action=get_product&id=${id}`)
+                .then(response => response.json())
+                .then(product => {
+                    if (product.error) {
+                        alert(product.error);
+                        return;
+                    }
+                    
+                    // Switch to Add Product tab
+                    document.querySelector('.tab-button[data-tab="add-product"]').click();
+                    
+                    // Fill the form with product data
+                    document.getElementById('product-name').value = product.name;
+                    document.getElementById('product-type').value = product.type_id || '';
+                    document.getElementById('product-date').value = product.date;
+                    document.getElementById('product-quantity').value = product.quantity;
+                    
+                    // Change form action to update
+                    const form = document.getElementById('product-form');
+                    form.innerHTML += `<input type="hidden" name="id" value="${product.id}">`;
+                    form.querySelector('input[name="action"]').value = 'update_product';
+                    form.querySelector('button[type="submit"]').textContent = 'Update Product';
+                })
+                .catch(error => alert('Error loading product: ' + error.message));
+        }
+
 
         // Form submissions
         document.getElementById('product-form').addEventListener('submit', function(e) {
