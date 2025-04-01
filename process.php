@@ -9,7 +9,7 @@ ini_set('display_errors', 1);
 
 // Include controllers
 require_once 'product-controller.php';
-
+require_once 'product-type-controller.php';
 
 // Database connection
 function getDatabase() {
@@ -61,7 +61,7 @@ if (is_array($db) && isset($db['error'])) {
 
 // Initialize controllers
 $productController = new ProductController($db);
-
+$productTypeController = new ProductTypeController($db);
 
 // Route the request based on action
 switch ($action) {
@@ -119,10 +119,61 @@ switch ($action) {
         jsonResponse($result);
         break;
 
-    
+    // Product Type actions
+    case 'get_all_product_types':
+        $types = $productTypeController->getAllProductTypes();
+        jsonResponse($types);
+        break;
 
-   
+    case 'get_product_type':
+        if (!isset($_GET['id'])) {
+            jsonResponse(['error' => 'Product Type ID is required']);
+        }
+        $type = $productTypeController->getProductTypeById($_GET['id']);
+        jsonResponse($type);
+        break;
 
-   
+    case 'create_product_type':
+        if (!isset($_POST['name'])) {
+            jsonResponse(['error' => 'Name is required']);
+        }
+        
+        $description = isset($_POST['description']) ? $_POST['description'] : '';
+        $result = $productTypeController->createProductType($_POST['name'], $description);
+        jsonResponse($result);
+        break;
+
+    case 'update_product_type':
+        if (!isset($_POST['id']) || !isset($_POST['name'])) {
+            jsonResponse(['error' => 'Missing required fields']);
+        }
+        
+        $description = isset($_POST['description']) ? $_POST['description'] : '';
+        $result = $productTypeController->updateProductType(
+            $_POST['id'],
+            $_POST['name'],
+            $description
+        );
+        jsonResponse($result);
+        break;
+
+    case 'delete_product_type':
+        if (!isset($_GET['id'])) {
+            jsonResponse(['error' => 'Product Type ID is required']);
+        }
+        $result = $productTypeController->deleteProductType($_GET['id']);
+        jsonResponse($result);
+        break;
+
+    case 'get_products_by_type':
+        if (!isset($_GET['type_id'])) {
+            jsonResponse(['error' => 'Type ID is required']);
+        }
+        $products = $productTypeController->getProductsByType($_GET['type_id']);
+        jsonResponse($products);
+        break;
+
+    default:
+        jsonResponse(['error' => 'Invalid action']);
 }
 ?>
