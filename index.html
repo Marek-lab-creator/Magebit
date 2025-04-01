@@ -152,14 +152,32 @@
             <div id="product-form-result"></div>
         </div>
         
-        
+        <div id="add-product-type" class="tab-content">
+            <h2>Add New Product Type</h2>
+            <form id="product-type-form" action="process.php" method="post">
+                <input type="hidden" name="action" value="create_product_type">
+                
+                <div class="form-group">
+                    <label for="product-type-name">Type Name:</label>
+                    <input type="text" id="product-type-name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-type-description">Description:</label>
+                    <textarea id="product-type-description" name="description" rows="4"></textarea>
+                </div>
+                
+                <button type="submit">Add Product Type</button>
+            </form>
+            <div id="product-type-form-result"></div>
+        </div>        
     </div>
 
     <script>
         // Tab functionality
         document.querySelectorAll('.tab-button').forEach(button => {
             button.addEventListener('click', () => {
-       
+                document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                 
                 button.classList.add('active');
@@ -306,7 +324,8 @@
                     })
                     .catch(error => alert('Error: ' + error.message));
             }
-        }function editProduct(id) {
+        }
+        function editProduct(id) {
             fetch(`process.php?action=get_product&id=${id}`)
                 .then(response => response.json())
                 .then(product => {
