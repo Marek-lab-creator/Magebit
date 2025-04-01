@@ -241,8 +241,7 @@
                     document.getElementById('products-table-container').innerHTML = 
                         `<div class="alert alert-danger">Error loading products: ${error.message}</div>`;
                 });
-        }
-        
+        }     
 
 
         
@@ -326,8 +325,8 @@
                     .catch(error => alert('Error: ' + error.message));
             }
         }
-// Delete product type
-function deleteProductType(id) {
+        // Delete product type
+        function deleteProductType(id) {
             if (confirm('Are you sure you want to delete this product type? This may affect associated products.')) {
                 fetch(`process.php?action=delete_product_type&id=${id}`)
                     .then(response => response.json())
@@ -422,7 +421,30 @@ function deleteProductType(id) {
             });
         });
 
-       
+        document.getElementById('product-type-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            fetch('process.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('product-type-form-result');
+                if (data.success) {
+                    resultDiv.innerHTML = `<div class="alert alert-success">${data.message}</div>`;
+                    this.reset();
+                    loadProductTypes();
+                } else {
+                    resultDiv.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+                }
+            })
+            .catch(error => {
+                document.getElementById('product-type-form-result').innerHTML = 
+                    `<div class="alert alert-danger">Error: ${error.message}</div>`;
+            });
+        });       
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {

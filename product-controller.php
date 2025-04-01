@@ -199,5 +199,31 @@ class ProductController
             return ['error' => 'Failed to delete product: ' . $e->getMessage()];
         }
     }  
+ 
+    // /**
+    //  * Search products by name
+    //  * 
+    //  * @param string $searchTerm Search term
+    //  * @return array List of matching products
+    //  */
+    // public function searchProducts($searchTerm)
+    // {
+    //     try {
+    //         $searchTerm = '%' . $searchTerm . '%';
+    //         $query = "SELECT p.*, pt.name as type_name 
+    //                  FROM products p
+    //                  LEFT JOIN product_types pt ON p.type_id = pt.id
+    //                  WHERE p.name LIKE :search_term
+    //                  ORDER BY p.name";
+            
+    //         $stmt = $this->db->prepare($query);
+    //         $stmt->bindParam(':search_term', $searchTerm, PDO::PARAM_STR);
+    //         $stmt->execute();
+            
+    //         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    //     } catch (PDOException $e) {
+    //         return ['error' => 'Failed to search products: ' . $e->getMessage()];
+    //     }
+    // }
 }
 ?>
